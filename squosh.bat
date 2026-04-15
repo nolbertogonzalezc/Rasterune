@@ -1,0 +1,3 @@
+node .\squoosh.js
+
+exit
