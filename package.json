@@ -5,6 +5,7 @@
   "scripts": {
     "build": "vite build",
     "build:figma": "node figma-plugin/build.mjs",
+    "build:tmp": "powershell -ExecutionPolicy Bypass -File .\\scripts\\deploy-figma-local.ps1",
     "build:all": "npm run build && npm run build:figma",
     "dev": "vite",
     "typecheck": "tsc --noEmit",

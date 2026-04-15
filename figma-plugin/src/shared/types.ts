@@ -1,7 +1,9 @@
 export type OutputFormat = 'webp' | 'avif';
+export type ExportScale = 1 | 2 | 3 | 4;
 
 export interface FigmaPluginSettings {
   outputFormat: OutputFormat;
+  scale: ExportScale;
   quality: number;
   effort: number;
 }

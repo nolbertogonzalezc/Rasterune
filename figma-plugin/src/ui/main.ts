@@ -1,8 +1,8 @@
 import { GoogleSquooshAdapter } from '../../../src/engine/googleSquooshAdapter';
 import type { UiToPluginMessage, PluginToUiMessage } from '../shared/messages';
 import type { BootstrapPayload, ExportedSelectionItem, FigmaPluginSettings, SelectionItem } from '../shared/types';
+import logoSrc from '../../assets/rasterune_logo_128x128.png';
 
-const LOGO_SRC = '../assets/rasterune_logo_128x128.png';
 const adapter = new GoogleSquooshAdapter();
 
 interface UiState {
@@ -14,6 +14,7 @@ interface UiState {
 const state: UiState = {
   settings: {
     outputFormat: 'webp',
+    scale: 2,
     quality: 85,
     effort: 6,
   },
@@ -34,10 +35,10 @@ function render(): void {
   root.innerHTML = `
     <main class="figma-app">
       <header class="figma-app__header">
-        <img class="figma-app__logo" src="${LOGO_SRC}" alt="Rasterune" />
+        <img class="figma-app__logo" src="${logoSrc}" alt="Rasterune" />
         <div>
           <h1 class="figma-app__title">Rasterune for Figma</h1>
-          <p class="figma-app__subtitle">Export the current selection and convert it with your Rasterune settings.</p>
+          <p class="figma-app__subtitle">Inspect selection, tune export scale, and convert directly from Dev Mode.</p>
         </div>
       </header>
 
@@ -48,6 +49,15 @@ function render(): void {
           <select id="outputFormat" name="outputFormat">
             <option value="webp" ${state.settings.outputFormat === 'webp' ? 'selected' : ''}>WebP</option>
             <option value="avif" ${state.settings.outputFormat === 'avif' ? 'selected' : ''}>AVIF</option>
+          </select>
+        </div>
+        <div class="figma-app__field">
+          <label for="scale">Scale</label>
+          <select id="scale" name="scale">
+            <option value="1" ${state.settings.scale === 1 ? 'selected' : ''}>1x</option>
+            <option value="2" ${state.settings.scale === 2 ? 'selected' : ''}>2x</option>
+            <option value="3" ${state.settings.scale === 3 ? 'selected' : ''}>3x</option>
+            <option value="4" ${state.settings.scale === 4 ? 'selected' : ''}>4x</option>
           </select>
         </div>
         <div class="figma-app__field">
@@ -64,7 +74,7 @@ function render(): void {
             <span class="figma-app__hint">0-9</span>
           </div>
         </div>
-        <p class="figma-app__hint">Rasterune exports the selection from Figma as PNG first, then converts it to the target format.</p>
+        <p class="figma-app__hint">Figma renders the selection as PNG at the chosen scale, then Rasterune converts it to the final format.</p>
       </section>
 
       <section class="figma-app__section">
@@ -86,9 +96,6 @@ function render(): void {
         }>
           Convert selection
         </button>
-        <button class="figma-app__button figma-app__button--secondary" type="button" data-action="close">
-          Close
-        </button>
       </footer>
     </main>
   `;
@@ -96,18 +103,20 @@ function render(): void {
 
 function readSettingsFromForm(): FigmaPluginSettings {
   const outputFormat = (document.getElementById('outputFormat') as HTMLSelectElement).value as FigmaPluginSettings['outputFormat'];
+  const scale = Number((document.getElementById('scale') as HTMLSelectElement).value) as FigmaPluginSettings['scale'];
   const quality = Number((document.getElementById('quality') as HTMLInputElement).value);
   const effort = Number((document.getElementById('effort') as HTMLInputElement).value);
 
   return {
     outputFormat,
+    scale: Math.min(4, Math.max(1, scale || 2)) as FigmaPluginSettings['scale'],
     quality: Math.min(100, Math.max(1, quality || 85)),
     effort: Math.min(9, Math.max(0, effort || 6)),
   };
 }
 
 async function downloadConvertedItems(items: ExportedSelectionItem[], settings: FigmaPluginSettings): Promise<void> {
-  state.status = `Converting ${items.length} item${items.length > 1 ? 's' : ''}...`;
+  state.status = `Converting ${items.length} item${items.length > 1 ? 's' : ''} at ${settings.scale}x...`;
   render();
 
   for (const item of items) {
@@ -195,9 +204,6 @@ document.addEventListener('click', (event) => {
     return;
   }
 
-  if (action === 'close') {
-    postMessageToPlugin({ type: 'CLOSE' });
-  }
 });
 
 render();

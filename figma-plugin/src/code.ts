@@ -3,11 +3,12 @@
 import type { PluginToUiMessage, UiToPluginMessage } from './shared/messages';
 import type { BootstrapPayload, FigmaPluginSettings, SelectionItem } from './shared/types';
 
-declare const __html__: string;
+declare const RASTERUNE_INLINE_UI_HTML: string;
 
 const STORAGE_KEY = 'rasterune:figma-settings';
 const DEFAULT_SETTINGS: FigmaPluginSettings = {
   outputFormat: 'webp',
+  scale: 2,
   quality: 85,
   effort: 6,
 };
@@ -55,7 +56,13 @@ async function exportSelection(settings: FigmaPluginSettings): Promise<void> {
   const items = await Promise.all(
     exportableNodes.map(async (node) => ({
       name: node.name || 'Layer',
-      bytes: await node.exportAsync({ format: 'PNG' }),
+      bytes: await node.exportAsync({
+        format: 'PNG',
+        constraint: {
+          type: 'SCALE',
+          value: settings.scale,
+        },
+      }),
       sourceMime: 'image/png' as const,
     })),
   );
@@ -69,9 +76,7 @@ async function exportSelection(settings: FigmaPluginSettings): Promise<void> {
   });
 }
 
-figma.showUI(__html__, {
-  width: 380,
-  height: 560,
+figma.showUI(RASTERUNE_INLINE_UI_HTML, {
   themeColors: true,
 });
 
@@ -98,7 +103,6 @@ figma.ui.onmessage = async (message: UiToPluginMessage) => {
       break;
 
     case 'CLOSE':
-      figma.closePlugin();
       break;
   }
 };
