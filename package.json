@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "build": "vite build",
+    "build:figma": "node figma-plugin/build.mjs",
+    "build:all": "npm run build && npm run build:figma",
     "dev": "vite",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "typecheck:figma": "tsc -p figma-plugin/tsconfig.json --noEmit"
   },
   "dependencies": {
     "@squoosh/cli": "^0.7.1",
@@ -14,6 +17,8 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.1.0",
     "@types/chrome": "^0.0.306",
+    "@figma/plugin-typings": "^1.117.0",
+    "esbuild": "^0.25.4",
     "typescript": "^5.6.3",
     "vite": "^5.4.10"
   }

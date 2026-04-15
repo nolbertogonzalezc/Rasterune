@@ -1,4 +1,4 @@
-import { createOutputFilename } from '../shared/utils/filename';
+import { createVariantFilename } from '../shared/utils/filename';
 import type { ConversionEngine, ConversionInput, ConversionResult } from './contracts';
 import { mapToNativeCodecSettings, mapToVendorCodecSettings } from './codecSettingsMapper';
 import { convertWithGoogleSquooshPatch, hasGoogleSquooshPatch } from './vendor/google-squoosh-patch';
@@ -70,7 +70,7 @@ export class GoogleSquooshAdapter implements ConversionEngine {
     return {
       blob,
       mimeType: nativeSettings.mimeType,
-      fileName: createOutputFilename(input.fileNameBase, extension),
+      fileName: createVariantFilename(input.fileNameBase, 'rasterune', extension),
     };
   }
 }

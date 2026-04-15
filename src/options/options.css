@@ -97,11 +97,12 @@ body {
 }
 
 .options__field select,
-.options__field input[type='range'] {
+.options__field input[type='number'] {
   width: 100%;
 }
 
-.options__field select {
+.options__field select,
+.options__field input[type='number'] {
   min-height: 42px;
   border: 1px solid var(--rt-color-surface-border);
   border-radius: 8px;
@@ -110,16 +111,19 @@ body {
   color: var(--rt-color-text);
 }
 
+.options__number-row {
+  display: grid;
+  grid-template-columns: minmax(0, 160px) auto;
+  gap: 12px;
+  align-items: center;
+}
+
 .options__field select:focus-visible,
-.options__field input[type='range']:focus-visible,
+.options__field input[type='number']:focus-visible,
 .options__toggle input[type='checkbox']:focus-visible,
 .options__info:focus-visible {
   outline: 2px solid var(--rt-color-accent);
   outline-offset: 2px;
-}
-
-.options__field input[type='range'] {
-  accent-color: var(--rt-color-brand);
 }
 
 .options__toggle input[type='checkbox'] {

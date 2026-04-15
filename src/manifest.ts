@@ -8,7 +8,7 @@ export default defineManifest({
   icons: {
     128: 'public/icons/rasterune_logo_128x128.png',
   },
-  permissions: ['storage', 'downloads', 'scripting', 'activeTab'],
+  permissions: ['storage', 'downloads', 'scripting', 'activeTab', 'contextMenus'],
   host_permissions: ['<all_urls>'],
   action: {
     default_title: 'Rasterune',
@@ -22,13 +22,6 @@ export default defineManifest({
     service_worker: 'src/background/index.ts',
     type: 'module',
   },
-  content_scripts: [
-    {
-      matches: ['<all_urls>'],
-      js: ['src/content/index.ts'],
-      run_at: 'document_idle',
-    },
-  ],
   web_accessible_resources: [
     {
       resources: ['assets/*'],

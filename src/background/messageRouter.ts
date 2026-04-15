@@ -1,6 +1,7 @@
 import type { RuntimeRequest, RuntimeResponse } from '../shared/messaging/messageTypes';
 import { NetworkService } from './networkService';
 import { StateService } from './stateService';
+import { syncContextMenu } from './contextMenuService';
 import { broadcastStateChanged } from './tabSync';
 
 export function registerMessageRouter(stateService: StateService): void {
@@ -38,12 +39,14 @@ async function routeMessage(
 
     case 'APP/SET_ENABLED': {
       const state = await stateService.setEnabled(message.payload.enabled);
+      await syncContextMenu(stateService);
       await broadcastStateChanged(state);
       return { state };
     }
 
     case 'APP/UPDATE_SETTINGS': {
       const state = await stateService.updateSettings(message.payload);
+      await syncContextMenu(stateService);
       await broadcastStateChanged(state);
       return { state };
     }

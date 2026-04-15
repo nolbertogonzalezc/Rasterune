@@ -36,13 +36,17 @@ function render(container: HTMLDivElement, state: ExtensionState): void {
         </label>
         <label class="options__field">
           <span>${translator.t('quality')} <button class="options__info" type="button" title="${translator.t('qualityInfo')}">i</button></span>
-          <input name="quality" type="range" min="1" max="100" value="${state.conversion.quality}" />
-          <strong>${state.conversion.quality}</strong>
+          <div class="options__number-row">
+            <input name="quality" type="number" min="1" max="100" step="1" value="${state.conversion.quality}" />
+            <strong>1-100</strong>
+          </div>
         </label>
         <label class="options__field">
           <span>${translator.t('effort')} <button class="options__info" type="button" title="${translator.t('effortInfo')}">i</button></span>
-          <input name="effort" type="range" min="0" max="9" value="${state.conversion.effort}" />
-          <strong>${state.conversion.effort}</strong>
+          <div class="options__number-row">
+            <input name="effort" type="number" min="0" max="9" step="1" value="${state.conversion.effort}" />
+            <strong>0-9</strong>
+          </div>
         </label>
         <label class="options__toggle">
           <span>${translator.t('autoDownload')}</span>
@@ -115,13 +119,6 @@ export async function mountOptionsApp(container: HTMLDivElement): Promise<void> 
     const target = event.target;
     if (!(target instanceof HTMLInputElement || target instanceof HTMLSelectElement)) {
       return;
-    }
-
-    if (target instanceof HTMLInputElement && target.type === 'range') {
-      const valueNode = target.parentElement?.querySelector('strong');
-      if (valueNode) {
-        valueNode.textContent = target.value;
-      }
     }
 
     state = await persist(container, state);

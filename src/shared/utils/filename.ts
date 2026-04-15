@@ -16,3 +16,7 @@ export function deriveBaseFilename(src: string): string {
 export function createOutputFilename(baseName: string, extension: string): string {
   return `${sanitizeFilenameSegment(baseName)}.${extension}`;
 }
+
+export function createVariantFilename(baseName: string, variant: string, extension: string): string {
+  return `${sanitizeFilenameSegment(baseName)}-${sanitizeFilenameSegment(variant)}.${extension}`;
+}
