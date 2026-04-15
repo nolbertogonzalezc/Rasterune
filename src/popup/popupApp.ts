@@ -3,6 +3,8 @@ import type { AppStatePayload, RuntimeEvent } from '../shared/messaging/messageT
 import { addRuntimeMessageListener, sendRuntimeMessage } from '../shared/messaging/runtimeClient';
 import type { ExtensionState } from '../shared/state/types';
 
+const LOGO_SRC = '/branding/rasterune.webp';
+
 function render(container: HTMLDivElement, state: ExtensionState): void {
   const translator = createTranslator(state.locale, navigator.language);
   const isEnabled = state.enabled;
@@ -10,9 +12,12 @@ function render(container: HTMLDivElement, state: ExtensionState): void {
   container.innerHTML = `
     <main class="popup">
       <header class="popup__header">
-        <div>
+        <div class="popup__brand">
+          <img class="popup__logo" src="${LOGO_SRC}" alt="${translator.t('appName')}" />
+          <div>
           <h1 class="popup__title">${translator.t('appName')}</h1>
           <p class="popup__status">${translator.t('status')}</p>
+          </div>
         </div>
         <span class="popup__badge ${isEnabled ? 'is-enabled' : 'is-disabled'}">
           ${isEnabled ? translator.t('enabled') : translator.t('disabled')}
@@ -26,6 +31,17 @@ function render(container: HTMLDivElement, state: ExtensionState): void {
       </button>
     </main>
   `;
+
+  const logo = container.querySelector('.popup__logo');
+  if (logo instanceof HTMLImageElement) {
+    logo.addEventListener(
+      'error',
+      () => {
+        logo.style.display = 'none';
+      },
+      { once: true },
+    );
+  }
 }
 
 export async function mountPopupApp(container: HTMLDivElement): Promise<void> {

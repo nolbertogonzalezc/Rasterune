@@ -5,11 +5,17 @@ export default defineManifest({
   name: 'Rasterune',
   version: '1.0.0',
   description: 'Convert JPG and PNG images to WebP or AVIF directly from the page.',
+  icons: {
+    128: 'public/icons/rasterune_logo_128x128.png',
+  },
   permissions: ['storage', 'downloads', 'scripting', 'activeTab'],
   host_permissions: ['<all_urls>'],
   action: {
     default_title: 'Rasterune',
     default_popup: 'src/popup/index.html',
+    default_icon: {
+      128: 'public/icons/rasterune_logo_128x128.png',
+    },
   },
   options_page: 'src/options/index.html',
   background: {

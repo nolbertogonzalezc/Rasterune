@@ -3,6 +3,8 @@ import type { AppStatePayload, RuntimeEvent } from '../shared/messaging/messageT
 import { addRuntimeMessageListener, sendRuntimeMessage } from '../shared/messaging/runtimeClient';
 import type { ExtensionState, OutputFormat, SupportedLocale } from '../shared/state/types';
 
+const LOGO_SRC = '/branding/rasterune.webp';
+
 function createOption(selected: boolean, value: string, label: string): string {
   return `<option value="${value}" ${selected ? 'selected' : ''}>${label}</option>`;
 }
@@ -13,9 +15,12 @@ function render(container: HTMLDivElement, state: ExtensionState): void {
   container.innerHTML = `
     <main class="options">
       <header class="options__header">
-        <div>
+        <div class="options__brand">
+          <img class="options__logo" src="${LOGO_SRC}" alt="${translator.t('appName')}" />
+          <div>
           <h1 class="options__title">${translator.t('optionsTitle')}</h1>
           <p class="options__subtitle">${translator.t('optionsSubtitle')}</p>
+          </div>
         </div>
         <span class="options__saved" id="saved-indicator">${translator.t('saved')}</span>
       </header>
@@ -64,6 +69,17 @@ function render(container: HTMLDivElement, state: ExtensionState): void {
       </section>
     </main>
   `;
+
+  const logo = container.querySelector('.options__logo');
+  if (logo instanceof HTMLImageElement) {
+    logo.addEventListener(
+      'error',
+      () => {
+        logo.style.display = 'none';
+      },
+      { once: true },
+    );
+  }
 }
 
 async function persist(container: HTMLDivElement, state: ExtensionState): Promise<ExtensionState> {

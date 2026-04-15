@@ -1,3 +1,4 @@
+import '../shared/ui/theme.css';
 import './options.css';
 import { mountOptionsApp } from './optionsApp';
 

@@ -14,7 +14,7 @@ interface OverlayCallbacks {
   onHideRequest(): void;
 }
 
-const STYLE_ID = 'squoosh-overlay-style';
+const STYLE_ID = 'rasterune-overlay-style';
 
 function ensureStyles(): void {
   if (document.getElementById(STYLE_ID)) {
@@ -33,9 +33,13 @@ function ensureStyles(): void {
       gap: 8px;
       padding: 8px 10px;
       border-radius: 8px;
-      background: rgba(18, 20, 25, 0.92);
-      color: #f5f7fb;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+        rgba(18, 18, 23, 0.96);
+      color: #f5f2ff;
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.32),
+        inset 0 0 0 1px rgba(91, 44, 207, 0.28);
       font: 12px/1.2 system-ui, sans-serif;
       pointer-events: auto;
       backdrop-filter: blur(10px);
@@ -50,11 +54,16 @@ function ensureStyles(): void {
       border: 0;
       border-radius: 6px;
       padding: 7px 10px;
-      background: #79e3b6;
-      color: #0f1720;
+      background: #5b2ccf;
+      color: #ffffff;
       font: inherit;
       font-weight: 600;
       cursor: pointer;
+      transition: background-color 140ms ease, opacity 140ms ease;
+    }
+
+    .squoosh-overlay__button:hover {
+      background: #6a39e0;
     }
 
     .squoosh-overlay__button[disabled] {
@@ -63,7 +72,7 @@ function ensureStyles(): void {
     }
 
     .squoosh-overlay__status {
-      color: rgba(245, 247, 251, 0.8);
+      color: rgba(245, 242, 255, 0.78);
     }
   `;
 
