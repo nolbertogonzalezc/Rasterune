@@ -8,6 +8,7 @@ import { deriveBaseFilename } from '../shared/utils/filename';
 
 interface DownloadAsset {
   fileName: string;
+  blob: Blob;
   url: string;
 }
 
@@ -58,7 +59,7 @@ export class ConversionOrchestrator {
     }
 
     const url = URL.createObjectURL(result.blob);
-    const asset = { fileName: result.fileName, url };
+    const asset = { fileName: result.fileName, blob: result.blob, url };
 
     if (this.settings.autoDownload) {
       this.triggerDownload(asset);
@@ -91,9 +92,12 @@ export class ConversionOrchestrator {
 
   private triggerDownload(asset: DownloadAsset): void {
     this.logger.debug('Trigger download', asset.fileName);
-    const anchor = document.createElement('a');
-    anchor.href = asset.url;
-    anchor.download = asset.fileName;
-    anchor.click();
+    void sendRuntimeMessage({
+      type: 'IMAGE/DOWNLOAD',
+      payload: {
+        blob: asset.blob,
+        fileName: asset.fileName,
+      },
+    });
   }
 }

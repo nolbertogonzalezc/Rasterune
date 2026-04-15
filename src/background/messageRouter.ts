@@ -55,6 +55,22 @@ async function routeMessage(
     case 'IMAGE/FETCH_BYTES':
       return networkService.fetchImageBytes(message.payload.src, message.payload.pageUrl);
 
+    case 'IMAGE/DOWNLOAD': {
+      const objectUrl = URL.createObjectURL(message.payload.blob);
+
+      try {
+        const downloadId = await chrome.downloads.download({
+          url: objectUrl,
+          filename: message.payload.fileName,
+          saveAs: message.payload.saveAs,
+        });
+
+        return { downloadId };
+      } finally {
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 10_000);
+      }
+    }
+
     default:
       return { error: 'Unsupported message type' };
   }
